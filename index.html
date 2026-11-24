@@ -112,7 +112,21 @@ button {
       홈 화면에 바로가기를 추가하시겠습니까?
     </div>
 
-    <div id="prepareArea">
+    <!-- 카카오톡·밴드 내부 브라우저 안내 -->
+    <div id="externalArea"
+         style="display:none; padding:16px 0;">
+
+      화면의 <b>점 세 개(⋮)</b>를 누르십시오.<br>
+
+      <b>「다른 브라우저로 열기」</b>를
+      선택하십시오.
+
+    </div>
+
+    <!-- 일반 브라우저 바로가기 준비 -->
+    <div id="prepareArea"
+         style="display:none;">
+
       홈 화면 바로가기를 만들려면<br>
       아래 버튼을 먼저 누르십시오.
 
@@ -120,19 +134,18 @@ button {
               onclick="prepareShortcut()">
         📲 바로가기 주소 준비
       </button>
+
     </div>
 
-    <div id="readyArea" style="display:none;">
+    <!-- 바로가기 주소 준비 완료 -->
+    <div id="readyArea"
+         style="display:none;">
 
       <div class="ready">
         바로가기 주소가 준비되었습니다.
       </div>
 
-      브라우저 메뉴에서
-      「<b>홈 화면에 추가</b>」를 선택하십시오.<br>
-
-      앱 설치 대신 바로가기 추가 항목이
-      있으면 선택하십시오.
+      <div id="browserInstructions"></div>
 
     </div>
 
@@ -145,7 +158,14 @@ button {
 /**************************************************
  * 2026.11.24
  * 파크골프 대회 운영 홈화면 바로가기
- * 기존 웹앱과 독립된 접속 전용 페이지
+ *
+ * 기존 운영 웹앱과 독립된 접속 전용 페이지
+ *
+ * - 카카오톡·밴드 내부 브라우저 감지
+ * - 일반 브라우저 등록 안내
+ * - setup=1 : 등록 준비 화면
+ * - home=1  : 기존 웹앱 바로 연결
+ * - 기존 클럽코드 유지
  **************************************************/
 
 const WEBAPP_URL =
@@ -167,7 +187,25 @@ const CLUB_CODE =
     : 'YJ-20';
 
 /**************************************************
- * 2. 기존 웹앱 연결
+ * 2. 브라우저 종류 확인
+ **************************************************/
+
+const UA =
+  navigator.userAgent || '';
+
+const IS_IN_APP =
+  /KAKAOTALK|KAKAO|NAVER.*BAND|BAND/i.test(UA);
+
+const IS_SAMSUNG =
+  /SamsungBrowser/i.test(UA);
+
+const IS_IOS =
+  /iPhone|iPad|iPod/i.test(UA) ||
+  (navigator.platform === 'MacIntel' &&
+   navigator.maxTouchPoints > 1);
+
+/**************************************************
+ * 3. 기존 웹앱 연결
  **************************************************/
 
 function openClub() {
@@ -180,7 +218,7 @@ function openClub() {
 }
 
 /**************************************************
- * 3. 홈화면 추가 안내 열기 / 닫기
+ * 4. 홈화면 추가 안내 열기 / 닫기
  **************************************************/
 
 function toggleGuide() {
@@ -194,18 +232,79 @@ function toggleGuide() {
   const isOpen =
     guide.style.display === 'block';
 
-  guide.style.display =
-    isOpen ? 'none' : 'block';
+  if (isOpen) {
 
-  btn.textContent =
-    isOpen
-      ? '홈 화면에 바로가기 추가 ▼'
-      : '홈 화면에 바로가기 추가 ▲';
+    guide.style.display = 'none';
+
+    btn.textContent =
+      '홈 화면에 바로가기 추가 ▼';
+
+    return;
+
+  }
+
+  showGuide();
 
 }
 
 /**************************************************
- * 4. 바로가기 주소 준비
+ * 5. 브라우저별 안내 화면 표시
+ **************************************************/
+
+function showGuide() {
+
+  document.getElementById('guide')
+    .style.display = 'block';
+
+  document.getElementById('toggleBtn')
+    .textContent =
+      '홈 화면에 바로가기 추가 ▲';
+
+  // 준비 완료 화면은 그대로 유지
+  if (
+    document.getElementById('readyArea')
+      .style.display === 'block'
+  ) {
+    return;
+  }
+
+  document.getElementById('externalArea')
+    .style.display = 'none';
+
+  document.getElementById('prepareArea')
+    .style.display = 'none';
+
+  // 카카오톡·밴드 내부 브라우저
+  if (IS_IN_APP) {
+
+    const url =
+      new URL(window.location.href);
+
+    url.searchParams.set('club', CLUB_CODE);
+    url.searchParams.set('setup', '1');
+    url.searchParams.delete('home');
+
+    history.replaceState(
+      null,
+      '',
+      url.toString()
+    );
+
+    document.getElementById('externalArea')
+      .style.display = 'block';
+
+    return;
+
+  }
+
+  // 삼성 인터넷·크롬 등 일반 브라우저
+  document.getElementById('prepareArea')
+    .style.display = 'block';
+
+}
+
+/**************************************************
+ * 6. 바로가기 주소 준비
  **************************************************/
 
 function prepareShortcut() {
@@ -218,11 +317,15 @@ function prepareShortcut() {
   url.searchParams.set('club', CLUB_CODE);
   url.searchParams.set('home', '1');
 
+  // 주소만 변경하고 화면은 이동하지 않음
   history.replaceState(
     null,
     '',
     url.toString()
   );
+
+  document.getElementById('externalArea')
+    .style.display = 'none';
 
   document.getElementById('prepareArea')
     .style.display = 'none';
@@ -230,21 +333,86 @@ function prepareShortcut() {
   document.getElementById('readyArea')
     .style.display = 'block';
 
+  showBrowserInstructions();
+
 }
 
 /**************************************************
- * 5. 홈화면 바로가기 실행
+ * 7. 브라우저별 홈화면 추가 안내
  **************************************************/
 
-if (params.get('home') === '1') {
+function showBrowserInstructions() {
 
-  window.location.replace(
-    WEBAPP_URL +
-    '?club=' +
-    encodeURIComponent(CLUB_CODE)
-  );
+  const area =
+    document.getElementById(
+      'browserInstructions'
+    );
+
+  // 삼성 인터넷
+  if (IS_SAMSUNG) {
+
+    area.innerHTML =
+      '화면 아래 <b>메뉴(☰ 또는 ⋮)</b>를 누르십시오.<br>' +
+      '<b>「현재 페이지에 추가」</b>를 선택하십시오.<br>' +
+      '<b>「홈 화면」 → 「추가」</b>를 누르십시오.';
+
+    return;
+
+  }
+
+  // 아이폰
+  if (IS_IOS) {
+
+    area.innerHTML =
+      'Safari의 <b>공유 버튼</b>을 누르십시오.<br>' +
+      '<b>「홈 화면에 추가」</b>를 선택하십시오.<br>' +
+      '<b>「추가」</b>를 누르십시오.';
+
+    return;
+
+  }
+
+  // Chrome 및 기타 일반 브라우저
+  area.innerHTML =
+    '브라우저 <b>메뉴(⋮)</b>를 누르십시오.<br>' +
+    '<b>「홈 화면에 추가」</b>를 선택하십시오.<br>' +
+    '바로가기 추가 항목이 있으면 선택하십시오.';
 
 }
+
+/**************************************************
+ * 8. 최초 접속 화면 분기
+ **************************************************/
+
+function initializePage() {
+
+  // 등록 준비 주소로 접속한 경우
+  if (params.get('setup') === '1') {
+
+    showGuide();
+
+    return;
+
+  }
+
+  // 홈화면 바로가기 주소로 접속한 경우
+  if (params.get('home') === '1') {
+
+    window.location.replace(
+      WEBAPP_URL +
+      '?club=' +
+      encodeURIComponent(CLUB_CODE)
+    );
+
+    return;
+
+  }
+
+  // 일반 접속은 최초 두 버튼 화면 유지
+
+}
+
+initializePage();
 
 </script>
 
