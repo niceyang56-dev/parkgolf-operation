@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<!-- 2026.11.24 카카오톡 미리보기 설정 -->
+
+<title>◆연제구 MASTER클럽</title>
+
+<meta property="og:type"
+      content="website">
+
+<meta property="og:title"
+      content="◆연제구 MASTER클럽">
+
+<meta property="og:description"
+      content="PARK GOLF Management">
+
+<meta property="og:image"
+      content="https://niceyang56-dev.github.io/parkgolf-operation/parkgolf-192.png">
+
+<meta property="og:url"
+      content="https://niceyang56-dev.github.io/parkgolf-operation/YJ-20.html">
+
+<link rel="icon"
+      type="image/png"
+      href="./parkgolf-192.png">
+
+<link rel="apple-touch-icon"
+      href="./parkgolf-192.png">
+
+</head>
+
+<body>
+
+<script>
+
+/**************************************************
+ * 2026.11.24
+ * 클럽별 미리보기 전용 접속 페이지
+ * 기존 공통 index.html로 연결
+ **************************************************/
+
+const CLUB_CODE = 'YJ-20';
+const CLUB_NAME = '연제구 MASTER클럽';
+
+const targetUrl =
+  './index.html?club='
+  + encodeURIComponent(CLUB_CODE)
+  + '&clubName='
+  + encodeURIComponent(CLUB_NAME);
+
+window.location.replace(targetUrl);
+
+</script>
+
+</body>
+</html>
