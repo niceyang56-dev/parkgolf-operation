@@ -2,6 +2,35 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<!-- 2026.11.24 홈화면 바로가기 즉시 접속 -->
+<script>
+(function() {
+
+  const params =
+    new URLSearchParams(window.location.search);
+
+  const club =
+    (params.get('club') || '').trim().toUpperCase();
+
+  if (
+    params.get('home') === '1' &&
+    /^[A-Z]{2}-[0-9]{2,}$/.test(club)
+  ) {
+
+    const WEBAPP_URL =
+      'https://script.google.com/macros/s/AKfycbw97E4M3EN7oBK_KfkP35plf9H-8ghj0Hv_1EzMGNX-biYNDPQzX_d3cTjcT-MpdbEy/exec';
+
+    document.documentElement.style.visibility = 'hidden';
+
+    window.location.replace(
+      WEBAPP_URL + '?club=' + encodeURIComponent(club)
+    );
+
+  }
+
+})();
+</script>
+      
 <meta name="viewport"
       content="width=device-width, initial-scale=1">
 
