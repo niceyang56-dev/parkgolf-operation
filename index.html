@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>파크골프 대회 운영</title>
+
+<meta name="theme-color" content="#086cc5">
+
+<style>
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  padding:5px 10px;
+  background:#f0f5fa;
+  font-family:Arial,"Malgun Gothic",sans-serif;
+  color:#073b65;
+}
+
+.card {
+  max-width:520px;
+  margin:4px auto;
+  padding:14px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+h1 {
+  margin:4px 0 16px;
+  font-size:28px;
+  text-align:center;
+}
+
+button {
+  width:100%;
+  min-height:60px;
+  border:0;
+  border-radius:12px;
+  font-size:22px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.primary {
+  background:#086cc5;
+  color:#fff;
+}
+
+.toggle {
+  margin-top:10px;
+  background:#e4eef8;
+  color:#073b65;
+}
+
+.guide {
+  display:none;
+  margin-top:9px;
+  padding:20px 14px 14px;
+  border:1px solid #cbdcf0;
+  border-radius:12px;
+  background:#f3f6f9;
+  text-align:center;
+  font-size:18px;
+  line-height:1.5;
+}
+
+.guide-title {
+  font-size:20px;
+  font-weight:700;
+  margin:8px 0;
+}
+
+.guide button {
+  margin-top:16px;
+}
+
+.ready {
+  font-weight:700;
+  margin:8px 0 24px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>🏌️ 파크골프 대회 운영</h1>
+
+  <button class="primary"
+          onclick="openClub()">
+    대회 운영 화면 열기
+  </button>
+
+  <button id="toggleBtn"
+          class="toggle"
+          onclick="toggleGuide()">
+    홈 화면에 바로가기 추가 ▼
+  </button>
+
+  <div id="guide" class="guide">
+
+    <div class="guide-title">
+      홈 화면에 바로가기를 추가하시겠습니까?
+    </div>
+
+    <div id="prepareArea">
+      홈 화면 바로가기를 만들려면<br>
+      아래 버튼을 먼저 누르십시오.
+
+      <button class="primary"
+              onclick="prepareShortcut()">
+        📲 바로가기 주소 준비
+      </button>
+    </div>
+
+    <div id="readyArea" style="display:none;">
+
+      <div class="ready">
+        바로가기 주소가 준비되었습니다.
+      </div>
+
+      브라우저 메뉴에서
+      「<b>홈 화면에 추가</b>」를 선택하십시오.<br>
+
+      앱 설치 대신 바로가기 추가 항목이
+      있으면 선택하십시오.
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/**************************************************
+ * 2026.11.24
+ * 파크골프 대회 운영 홈화면 바로가기
+ * 기존 웹앱과 독립된 접속 전용 페이지
+ **************************************************/
+
+const WEBAPP_URL =
+  'https://script.google.com/macros/s/AKfycbw97E4M3EN7oBK_KfkP35plf9H-8ghj0Hv_1EzMGNX-biYNDPQzX_d3cTjcT-MpdbEy/exec';
+
+const params =
+  new URLSearchParams(window.location.search);
+
+/**************************************************
+ * 1. 최초 접속 클럽코드
+ **************************************************/
+
+const requestedClub =
+  (params.get('club') || '').trim().toUpperCase();
+
+const CLUB_CODE =
+  /^[A-Z]{2}-[0-9]{2,}$/.test(requestedClub)
+    ? requestedClub
+    : 'YJ-20';
+
+/**************************************************
+ * 2. 기존 웹앱 연결
+ **************************************************/
+
+function openClub() {
+
+  window.location.href =
+    WEBAPP_URL +
+    '?club=' +
+    encodeURIComponent(CLUB_CODE);
+
+}
+
+/**************************************************
+ * 3. 홈화면 추가 안내 열기 / 닫기
+ **************************************************/
+
+function toggleGuide() {
+
+  const guide =
+    document.getElementById('guide');
+
+  const btn =
+    document.getElementById('toggleBtn');
+
+  const isOpen =
+    guide.style.display === 'block';
+
+  guide.style.display =
+    isOpen ? 'none' : 'block';
+
+  btn.textContent =
+    isOpen
+      ? '홈 화면에 바로가기 추가 ▼'
+      : '홈 화면에 바로가기 추가 ▲';
+
+}
+
+/**************************************************
+ * 4. 바로가기 주소 준비
+ **************************************************/
+
+function prepareShortcut() {
+
+  const url =
+    new URL(window.location.href);
+
+  url.search = '';
+
+  url.searchParams.set('club', CLUB_CODE);
+  url.searchParams.set('home', '1');
+
+  history.replaceState(
+    null,
+    '',
+    url.toString()
+  );
+
+  document.getElementById('prepareArea')
+    .style.display = 'none';
+
+  document.getElementById('readyArea')
+    .style.display = 'block';
+
+}
+
+/**************************************************
+ * 5. 홈화면 바로가기 실행
+ **************************************************/
+
+if (params.get('home') === '1') {
+
+  window.location.replace(
+    WEBAPP_URL +
+    '?club=' +
+    encodeURIComponent(CLUB_CODE)
+  );
+
+}
+
+</script>
+
+</body>
+</html>
