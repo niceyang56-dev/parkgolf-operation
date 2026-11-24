@@ -7,8 +7,6 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1">
 
-<!-- 2026.11.24 카카오톡 미리보기 설정 -->
-
 <title>◆연제구 MASTER클럽</title>
 
 <meta property="og:type"
@@ -39,22 +37,9 @@
 
 <script>
 
-/**************************************************
- * 2026.11.24
- * 클럽별 미리보기 전용 접속 페이지
- * 기존 공통 index.html로 연결
- **************************************************/
-
-const CLUB_CODE = 'YJ-20';
-const CLUB_NAME = '연제구 MASTER클럽';
-
-const targetUrl =
-  './index.html?club='
-  + encodeURIComponent(CLUB_CODE)
-  + '&clubName='
-  + encodeURIComponent(CLUB_NAME);
-
-window.location.replace(targetUrl);
+window.location.replace(
+  "./index.html?club=YJ-20&clubName=%EC%97%B0%EC%A0%9C%EA%B5%AC%20MASTER%ED%81%B4%EB%9F%BD"
+);
 
 </script>
 
