@@ -101,7 +101,62 @@ document.getElementById('currentUrl')
 document.getElementById('referrer')
   .textContent = document.referrer || '정보 없음';
 
+// 2026.11.25 추가 브라우저 판별 시험
+
+const extra = {
+
+  '브라우저 공급자': navigator.vendor,
+
+  '플랫폼': navigator.platform,
+
+  '화면 가로': screen.width,
+
+  '화면 세로': screen.height,
+
+  '내부 화면 가로': window.innerWidth,
+
+  '내부 화면 세로': window.innerHeight,
+
+  '외부 화면 가로': window.outerWidth,
+
+  '외부 화면 세로': window.outerHeight,
+
+  'Standalone':
+    matchMedia('(display-mode: standalone)').matches,
+
+  'Browser':
+    matchMedia('(display-mode: browser)').matches,
+
+  'History 길이': history.length
+
+};
+
+const extraBox = document.createElement('div');
+
+extraBox.className = 'box';
+
+const extraTitle = document.createElement('div');
+
+extraTitle.className = 'label';
+
+extraTitle.textContent = '⑤ 추가 브라우저 정보';
+
+extraBox.appendChild(extraTitle);
+
+Object.entries(extra).forEach(([key, value]) => {
+
+  const line = document.createElement('div');
+
+  line.textContent = key + ' : ' + value;
+
+  extraBox.appendChild(line);
+
+});
+
+document.body.appendChild(extraBox);
+
 </script>
 
 </body>
 </html>
+
