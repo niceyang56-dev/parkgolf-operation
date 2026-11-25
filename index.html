@@ -142,6 +142,10 @@ button {
     <div id="externalArea"
          style="display:none; padding:16px 0;">
 
+    <div class="guide-title">
+      홈 화면에 바로가기를 추가하시겠습니까?
+    </div> 
+
       화면의 <b>점3개(⋮)</b>를 누르시고.<br>
 
       <b>「다른 브라우저로 열기」</b>를
@@ -472,8 +476,12 @@ function initializePage() {
       document.getElementById('externalArea');
 
     externalArea.innerHTML =
+      '<div class="guide-title">' +
+      '홈 화면에 바로가기를 추가하시겠습니까?' +
+      '</div>' +
       '화면 상단의 <b>점3개(⋮)</b>를 누르시고.<br>' +
-      '<b>「삼성 인터넷 브라우저에서 열기」</b>를 선택하세요.';
+      '<b>「삼성 인터넷 브라우저에서 열기」</b>' +
+      '를 선택하세요.';
 
     externalArea.style.display = 'block';
 
