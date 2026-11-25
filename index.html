@@ -239,6 +239,22 @@ const IS_IN_APP =
 const IS_SAMSUNG =
   /SamsungBrowser/i.test(UA);
 
+/**************************************************
+ * 2026.11.25
+ * 밴드 접속 환경 추정 판별
+ **************************************************/
+
+const IS_KAKAO =
+  /KAKAOTALK|KAKAO/i.test(UA);
+
+const IS_BAND_LIKE =
+  !IS_KAKAO &&
+  !IS_SAMSUNG &&
+  /Android/i.test(UA) &&
+  /Chrome/i.test(UA) &&
+  !window.matchMedia('(display-mode: browser)').matches &&
+  !window.matchMedia('(display-mode: standalone)').matches;  
+
 const IS_IOS =
   /iPhone|iPad|iPod/i.test(UA) ||
   (navigator.platform === 'MacIntel' &&
@@ -423,18 +439,10 @@ function showBrowserInstructions() {
 
 /**************************************************
  * 8. 최초 접속 화면 분기
+ * 2026.11.25 밴드 접속 환경 버튼 제어 추가
  **************************************************/
 
 function initializePage() {
-
-  // 등록 준비 주소로 접속한 경우
-  if (params.get('setup') === '1') {
-
-    showGuide();
-
-    return;
-
-  }
 
   // 홈화면 바로가기 주소로 접속한 경우
   if (params.get('home') === '1') {
@@ -444,6 +452,29 @@ function initializePage() {
       '?club=' +
       encodeURIComponent(CLUB_CODE)
     );
+
+    return;
+
+  }
+
+  // 밴드와 유사한 내부 브라우저 접속 환경
+  if (IS_BAND_LIKE) {
+
+    const btn =
+      document.getElementById('toggleBtn');
+
+    btn.disabled = true;
+    btn.style.opacity = '0.45';
+    btn.style.cursor = 'default';
+
+    return;
+
+  }
+
+  // 등록 준비 주소로 접속한 경우
+  if (params.get('setup') === '1') {
+
+    showGuide();
 
     return;
 
