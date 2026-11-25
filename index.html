@@ -457,7 +457,7 @@ function initializePage() {
 
   }
 
-  // 밴드와 유사한 내부 브라우저 접속 환경
+   // 2026.11.25 밴드 접속 시 안내문 자동 표시
   if (IS_BAND_LIKE) {
 
     const btn =
@@ -466,6 +466,19 @@ function initializePage() {
     btn.disabled = true;
     btn.style.opacity = '0.45';
     btn.style.cursor = 'default';
+
+    // 기존 안내 영역 자동 표시
+    document.getElementById('guide')
+      .style.display = 'block';
+
+    const externalArea =
+      document.getElementById('externalArea');
+
+    externalArea.innerHTML =
+      '화면 상단의 <b>점 세 개(⋮)</b>를 누르십시오.<br>' +
+      '<b>「삼성 인터넷 브라우저에서 열기」</b>를 선택하십시오.';
+
+    externalArea.style.display = 'block';
 
     return;
 
