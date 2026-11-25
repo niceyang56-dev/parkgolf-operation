@@ -409,9 +409,9 @@ function showBrowserInstructions() {
   if (IS_SAMSUNG) {
 
     area.innerHTML =
-      '화면 아래 <b>메뉴(☰ 또는 ⋮)</b>를 누르십시오.<br>' +
-      '<b>「현재 페이지에 추가」</b>를 선택하십시오.<br>' +
-      '<b>「홈 화면」 → 「추가」</b>를 누르십시오.';
+      '화면 아래 <b>메뉴(☰ 또는 ⋮)</b> 누르시고<br>' +
+      '<b>「현재 페이지에 추가」</b> 선택한 후<br>' +
+      '<b>「홈 화면」 → 「추가」</b>를 누르세요.';
 
     return;
 
@@ -421,8 +421,8 @@ function showBrowserInstructions() {
   if (IS_IOS) {
 
     area.innerHTML =
-      'Safari의 <b>공유 버튼</b>을 누르십시오.<br>' +
-      '<b>「홈 화면에 추가」</b>를 선택하십시오.<br>' +
+      'Safari의 <b>공유 버튼</b> 누르시고<br>' +
+      '<b>「홈 화면에 추가」</b> 선택한후<br>' +
       '<b>「추가」</b>를 누르십시오.';
 
     return;
@@ -431,9 +431,9 @@ function showBrowserInstructions() {
 
   // Chrome 및 기타 일반 브라우저
   area.innerHTML =
-    '브라우저 <b>메뉴(⋮)</b>를 누르십시오.<br>' +
-    '<b>「홈 화면에 추가」</b>를 선택하십시오.<br>' +
-    '바로가기 추가 항목이 있으면 선택하십시오.';
+    '브라우저 <b>메뉴(⋮)</b> 누르시고<br>' +
+    '<b>「홈 화면에 추가」</b> 선택 한후<br>' +
+    '바로가기 추가 항목이 있으면 선택하세요.';
 
 }
 
@@ -476,7 +476,7 @@ function initializePage() {
 
     externalArea.innerHTML =
       '화면 상단의 <b>점3개(⋮)</b>를 누르시고.<br>' +
-      '<b>「삼성 인터넷 브라우저에서 열기」</b>를 선택하십시오.';
+      '<b>「삼성 인터넷 브라우저에서 열기」</b>를 선택하세요.';
 
     externalArea.style.display = 'block';
 
