@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>접속 환경 확인 시험</title>
+
+<style>
+
+body {
+  margin: 15px;
+  background: #f0f5fa;
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  color: #073b65;
+}
+
+h2 {
+  text-align: center;
+  font-size: 24px;
+}
+
+.box {
+  background: white;
+  border: 1px solid #ccd8e2;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 12px;
+  font-size: 18px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.label {
+  font-weight: bold;
+  color: #086cc5;
+}
+
+</style>
+</head>
+
+<body>
+
+<h2>📱 접속 환경 확인 시험</h2>
+
+<div class="box">
+  <div class="label">① 접속 환경 판별</div>
+  <div id="browserType"></div>
+</div>
+
+<div class="box">
+  <div class="label">② User-Agent 정보</div>
+  <div id="userAgent"></div>
+</div>
+
+<div class="box">
+  <div class="label">③ 현재 접속 주소</div>
+  <div id="currentUrl"></div>
+</div>
+
+<div class="box">
+  <div class="label">④ 이전 페이지 정보</div>
+  <div id="referrer"></div>
+</div>
+
+<script>
+
+const ua = navigator.userAgent;
+
+let browserType = '일반 또는 기타 브라우저';
+
+if (/KAKAOTALK/i.test(ua)) {
+
+  browserType = '카카오톡 내부 브라우저';
+
+} else if (/BAND/i.test(ua)) {
+
+  browserType = '밴드 내부 브라우저';
+
+} else if (/SamsungBrowser/i.test(ua)) {
+
+  browserType = '삼성 인터넷 브라우저';
+
+} else if (/Chrome/i.test(ua)) {
+
+  browserType = 'Chrome 계열 브라우저';
+
+}
+
+document.getElementById('browserType')
+  .textContent = browserType;
+
+document.getElementById('userAgent')
+  .textContent = ua;
+
+document.getElementById('currentUrl')
+  .textContent = window.location.href;
+
+document.getElementById('referrer')
+  .textContent = document.referrer || '정보 없음';
+
+</script>
+
+</body>
+</html>
