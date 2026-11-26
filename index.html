@@ -357,9 +357,9 @@ function showGuide() {
   document.getElementById('guide')
     .style.display = 'block';
 
+  // 2026.11.26 안내창 펼친 후 바로가기 버튼 숨김
   document.getElementById('toggleBtn')
-    .textContent =
-      '홈 화면에 바로가기 추가 ▲';
+    .style.display = 'none';
 
   // 준비 완료 화면은 그대로 유지
   if (
@@ -451,9 +451,9 @@ function showReady() {
   document.getElementById('guide')
     .style.display = 'block';
 
+  // 2026.11.26 주소 준비 완료 화면에서 버튼 숨김
   document.getElementById('toggleBtn')
-    .textContent =
-      '홈 화면에 바로가기 추가 ▲';
+    .style.display = 'none';
 
   document.getElementById('externalArea')
     .style.display = 'none';
@@ -500,10 +500,14 @@ function closeShortcutGuide() {
   document.getElementById('guide')
     .style.display = 'none';
 
+  // 2026.11.26 최초 화면 버튼 다시 표시
+  document.getElementById('toggleBtn')
+    .style.display = 'block';
+
   document.getElementById('toggleBtn')
     .textContent = '홈 화면에 바로가기 추가 ▼';
 
-}  
+}
   
 
 /**************************************************
@@ -584,15 +588,14 @@ function initializePage() {
 
   }
 
-  // 밴드 접속 시 안내문 자동 표시
+    // 밴드 접속 시 안내문 자동 표시
   if (IS_BAND_LIKE) {
 
     const btn =
       document.getElementById('toggleBtn');
 
-    btn.disabled = true;
-    btn.style.opacity = '0.45';
-    btn.style.cursor = 'default';
+    // 2026.11.26 밴드 안내 화면에서 버튼 숨김
+    btn.style.display = 'none';
 
     document.getElementById('guide')
       .style.display = 'block';
