@@ -178,7 +178,54 @@ button {
         바로가기 주소가 준비되었습니다.
       </div>
 
-      <div id="browserInstructions"></div>
+     <div id="browserInstructions"></div>
+
+<!-- 2026.11.26 바로가기 추가 완료 버튼 -->
+<button id="shortcutCompleteBtn"
+        class="primary"
+        style="margin-top:20px;"
+        onclick="completeShortcut()">
+  ✓ 바로가기 추가 완료
+</button>
+
+<!-- 2026.11.26 바로가기 완료 메시지 -->
+<div id="shortcutCompleteArea"
+     style="display:none;">
+
+  <div style="
+    color:#218838;
+    font-size:36px;
+    font-weight:700;
+    margin:10px 0;
+  ">
+    ✓
+  </div>
+
+  <div style="
+    color:#218838;
+    font-size:20px;
+    font-weight:700;
+    line-height:1.5;
+    margin-bottom:15px;
+  ">
+    홈 화면에 바로가기 추가가<br>
+    완료되었습니다.
+  </div>
+
+  <div style="
+    font-size:18px;
+    line-height:1.5;
+  ">
+    이제 휴대전화 홈 화면의<br>
+    아이콘을 터치하여 이용하십시오.
+  </div>
+
+  <button class="primary"
+          onclick="closeShortcutGuide()">
+    확인
+  </button>
+
+</div>
 
     </div>
 
@@ -420,6 +467,44 @@ function showReady() {
   showBrowserInstructions();
 
 }
+
+/**************************************************
+ * 2026.11.26 바로가기 추가 완료 확인
+ **************************************************/
+
+function completeShortcut() {
+
+  // 기존 준비 완료 안내문 숨기기
+  document.querySelector('#readyArea .ready')
+    .style.display = 'none';
+
+  document.getElementById('browserInstructions')
+    .style.display = 'none';
+
+  // 완료 버튼 숨기기
+  document.getElementById('shortcutCompleteBtn')
+    .style.display = 'none';
+
+  // 완료 메시지 표시
+  document.getElementById('shortcutCompleteArea')
+    .style.display = 'block';
+
+}
+
+/**************************************************
+ * 2026.11.26 완료 확인 후 안내창 닫기
+ **************************************************/
+
+function closeShortcutGuide() {
+
+  document.getElementById('guide')
+    .style.display = 'none';
+
+  document.getElementById('toggleBtn')
+    .textContent = '홈 화면에 바로가기 추가 ▼';
+
+}  
+  
 
 /**************************************************
  * 7. 브라우저별 홈화면 추가 안내
