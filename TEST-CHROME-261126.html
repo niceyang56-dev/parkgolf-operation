@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+
+<script>
+const params = new URLSearchParams(location.search);
+
+const CLUB_CODE =
+  (params.get('club') || 'YJ-20').trim().toUpperCase();
+
+const CLUB_NAME =
+  params.get('clubName') || '연제구 MASTER클럽';
+
+const WEBAPP_URL =
+  'https://script.google.com/macros/s/AKfycbw97E4M3EN7oBK_KfkP35plf9H-8ghj0Hv_1EzMGNX-biYNDPQzX_d3cTjcT-MpdbEy/exec';
+
+// 홈화면 바로가기 실행
+if (
+  params.get('home') === '1' &&
+  params.get('setup') !== '1' &&
+  /^[A-Z]{2}-[0-9]{2,}$/.test(CLUB_CODE)
+) {
+  document.documentElement.style.visibility = 'hidden';
+
+  location.replace(
+    WEBAPP_URL + '?club=' + encodeURIComponent(CLUB_CODE)
+  );
+}
+</script>
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>파크골프 대회 운영</title>
+
+<link rel="icon" type="image/png"
+      href="./parkgolf-192.png">
+
+<link rel="apple-touch-icon"
+      href="./parkgolf-192.png">
+
+<meta name="theme-color" content="#086cc5">
+
+<style>
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  padding:5px 10px;
+  background:#f0f5fa;
+  font-family:Arial,"Malgun Gothic",sans-serif;
+  color:#073b65;
+}
+
+.card {
+  max-width:520px;
+  margin:4px auto;
+  padding:14px;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+
+h1 {
+  margin:4px 0 16px;
+  font-size:28px;
+  text-align:center;
+}
+
+button {
+  width:100%;
+  min-height:60px;
+  border:0;
+  border-radius:12px;
+  font-size:22px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.primary {
+  background:#086cc5;
+  color:#fff;
+}
+
+.toggle {
+  margin-top:10px;
+  background:#e4eef8;
+  color:#073b65;
+}
+
+.guide {
+  display:none;
+  margin-top:9px;
+  padding:20px 14px 14px;
+  border:1px solid #cbdcf0;
+  border-radius:12px;
+  background:#f3f6f9;
+  text-align:center;
+  font-size:18px;
+  line-height:1.5;
+}
+
+.guide-title {
+  font-size:20px;
+  font-weight:700;
+  margin:8px 0;
+}
+
+.guide button {
+  margin-top:16px;
+}
+
+.ready {
+  font-weight:700;
+  margin:8px 0 24px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+  <h1>🏌️ 파크골프 대회 운영</h1>
+
+  <button class="primary" onclick="openClub()">
+    대회 운영 화면 열기
+  </button>
+
+  <button id="toggleBtn"
+          class="toggle"
+          onclick="toggleGuide()">
+    홈 화면에 바로가기 추가 ▼
+  </button>
+
+  <div id="guide" class="guide">
+
+    <div id="externalArea"
+         style="display:none; padding:16px 0;">
+
+      <div class="guide-title">
+        홈 화면에 바로가기를 추가하시겠습니까?
+      </div>
+
+      화면의 <b>점3개(⋮)</b>를 누르시고.<br>
+      <b>「다른 브라우저로 열기」</b>를
+      선택하십시오.
+
+    </div>
+
+    <div id="prepareArea" style="display:none;">
+
+      홈 화면 바로가기를 만들려면<br>
+      아래 버튼을 먼저 누르십시오.
+
+      <button class="primary"
+              onclick="prepareShortcut()">
+        📲 바로가기 주소 준비
+      </button>
+
+    </div>
+
+    <div id="readyArea" style="display:none;">
+
+      <div class="ready">
+        바로가기 주소가 준비되었습니다.
+      </div>
+
+      <div id="browserInstructions"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+/**************************************************
+ * 2026.11.26 Chrome 바로가기 시험 전용
+ **************************************************/
+
+document.title = CLUB_NAME;
+
+const UA = navigator.userAgent || '';
+
+const IS_KAKAO =
+  /KAKAOTALK|KAKAO/i.test(UA);
+
+const IS_IN_APP =
+  /KAKAOTALK|KAKAO|NAVER.*BAND|BAND/i.test(UA);
+
+const IS_SAMSUNG =
+  /SamsungBrowser/i.test(UA);
+
+const IS_IOS =
+  /iPhone|iPad|iPod/i.test(UA) ||
+  (navigator.platform === 'MacIntel' &&
+   navigator.maxTouchPoints > 1);
+
+const IS_BAND_LIKE =
+  !IS_KAKAO &&
+  !IS_SAMSUNG &&
+  /Android/i.test(UA) &&
+  /Chrome/i.test(UA) &&
+  !window.matchMedia('(display-mode: browser)').matches &&
+  !window.matchMedia('(display-mode: standalone)').matches;
+
+function openClub() {
+
+  location.href =
+    WEBAPP_URL + '?club=' +
+    encodeURIComponent(CLUB_CODE);
+
+}
+
+function toggleGuide() {
+
+  const guide = document.getElementById('guide');
+  const btn = document.getElementById('toggleBtn');
+
+  if (guide.style.display === 'block') {
+
+    guide.style.display = 'none';
+    btn.textContent = '홈 화면에 바로가기 추가 ▼';
+
+    return;
+  }
+
+  showGuide();
+}
+
+function showGuide() {
+
+  document.getElementById('guide')
+    .style.display = 'block';
+
+  document.getElementById('toggleBtn')
+    .textContent = '홈 화면에 바로가기 추가 ▲';
+
+  if (
+    document.getElementById('readyArea')
+      .style.display === 'block'
+  ) {
+    return;
+  }
+
+  document.getElementById('externalArea')
+    .style.display = 'none';
+
+  document.getElementById('prepareArea')
+    .style.display = 'none';
+
+  if (IS_IN_APP) {
+
+    const url = new URL(location.href);
+
+    url.searchParams.set('club', CLUB_CODE);
+    url.searchParams.set('clubName', CLUB_NAME);
+    url.searchParams.set('setup', '1');
+    url.searchParams.delete('home');
+
+    history.replaceState(null, '', url.toString());
+
+    document.getElementById('externalArea')
+      .style.display = 'block';
+
+    return;
+  }
+
+  document.getElementById('prepareArea')
+    .style.display = 'block';
+}
+
+/**************************************************
+ * 핵심 시험 부분
+ * 등록 준비 주소를 실제로 불러오기
+ **************************************************/
+
+function prepareShortcut() {
+
+  const url = new URL(location.href);
+
+  url.search = '';
+
+  url.searchParams.set('club', CLUB_CODE);
+  url.searchParams.set('clubName', CLUB_NAME);
+  url.searchParams.set('home', '1');
+  url.searchParams.set('setup', '1');
+
+  location.replace(url.toString());
+
+}
+
+function showReady() {
+
+  const url = new URL(location.href);
+
+  url.searchParams.delete('setup');
+
+  history.replaceState(null, '', url.toString());
+
+  document.getElementById('guide')
+    .style.display = 'block';
+
+  document.getElementById('toggleBtn')
+    .textContent = '홈 화면에 바로가기 추가 ▲';
+
+  document.getElementById('externalArea')
+    .style.display = 'none';
+
+  document.getElementById('prepareArea')
+    .style.display = 'none';
+
+  document.getElementById('readyArea')
+    .style.display = 'block';
+
+  showBrowserInstructions();
+
+}
+
+function showBrowserInstructions() {
+
+  const area =
+    document.getElementById('browserInstructions');
+
+  if (IS_SAMSUNG) {
+
+    area.innerHTML =
+      '화면 아래 <b>메뉴(☰ 또는 ⋮)</b> 누르시고<br>' +
+      '<b>「현재 페이지에 추가」</b> 선택한 후<br>' +
+      '<b>「홈 화면」→ 추가</b>를 누르세요';
+
+    return;
+  }
+
+  if (IS_IOS) {
+
+    area.innerHTML =
+      'Safari의 <b>공유 버튼</b> 누르시고<br>' +
+      '<b>「홈 화면에 추가」</b> 선택한 후<br>' +
+      '<b>「추가」</b>를 누르십시오.';
+
+    return;
+  }
+
+  area.innerHTML =
+    '브라우저 <b>메뉴(⋮)</b> 누르시고<br>' +
+    '<b>「홈 화면에 추가」</b> 선택한 후<br>' +
+    '바로가기 추가 항목이 있으면 선택하세요.';
+
+}
+
+function initializePage() {
+
+  if (IS_BAND_LIKE) {
+
+    const btn = document.getElementById('toggleBtn');
+
+    btn.disabled = true;
+    btn.style.opacity = '0.45';
+    btn.style.cursor = 'default';
+
+    document.getElementById('guide')
+      .style.display = 'block';
+
+    const area =
+      document.getElementById('externalArea');
+
+    area.innerHTML =
+      '<div class="guide-title">' +
+      '홈 화면에 바로가기를 추가하시겠습니까?' +
+      '</div>' +
+      '화면 상단의 <b>점3개(⋮)</b>를 누르시고.<br>' +
+      '<b>「삼성 인터넷 브라우저에서 열기」</b>' +
+      '를 선택하세요.';
+
+    area.style.display = 'block';
+
+    return;
+  }
+
+  if (
+    params.get('home') === '1' &&
+    params.get('setup') === '1'
+  ) {
+
+    showReady();
+    return;
+
+  }
+
+  if (params.get('setup') === '1') {
+
+    showGuide();
+
+  }
+
+}
+
+initializePage();
+
+</script>
+
+</body>
+</html>
