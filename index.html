@@ -541,7 +541,19 @@ function showBrowserInstructions() {
 
   }
 
-  // Chrome 및 기타 일반 브라우저
+  // 2026.11.26 Chrome 전용 안내문
+  if (/Chrome|CriOS/i.test(UA)) {
+
+    area.innerHTML =
+      '브라우저 <b>메뉴(⋮)</b>를 누르십시오.<br>' +
+      '<b>「설치 및 바로가기 만들기」</b> 선택 후<br>' +
+      '<b>「바로가기 만들기」 → 「추가」</b>를 누르십시오.';
+
+    return;
+
+  }
+
+  // 기타 일반 브라우저
   area.innerHTML =
     '브라우저 <b>메뉴(⋮)</b> 누르시고<br>' +
     '<b>「홈 화면에 추가」</b> 선택 한후<br>' +
