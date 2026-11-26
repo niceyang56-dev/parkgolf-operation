@@ -180,6 +180,19 @@ button {
 
      <div id="browserInstructions"></div>
 
+<!-- 2026.11.27 바로가기 완료 버튼 안내문 -->
+<div id="shortcutCompleteNotice"
+     style="
+       color:#A00000;
+       font-size:18px;
+       font-weight:700;
+       line-height:1.5;
+       margin-top:20px;
+     ">
+  추가 완료 메시지가 표시되면<br>
+  아래 버튼을 눌러 주십시오.
+</div> 
+
 <!-- 2026.11.26 바로가기 추가 완료 버튼 -->
 <button id="shortcutCompleteBtn"
         class="primary"
@@ -473,6 +486,10 @@ function showReady() {
  **************************************************/
 
 function completeShortcut() {
+
+  // 2026.11.27 완료 버튼 안내문 숨기기
+  document.getElementById('shortcutCompleteNotice')
+    .style.display = 'none';
 
   // 기존 준비 완료 안내문 숨기기
   document.querySelector('#readyArea .ready')
