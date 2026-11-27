@@ -128,19 +128,74 @@ button {
 
   <h1>🏌️ 파크골프 대회 운영</h1>
 
-  <button class="primary"
-          onclick="openClub()">
-    대회 운영 화면 열기
-  </button>
+    <!-- 2026.11.27 클럽명 자동 표시 -->
+    <button id="openClubBtn"
+            class="primary"
+            onclick="openClub()">
+      대회 운영 화면 열기
+    </button>
 
-  <button id="toggleBtn"
+    <button id="toggleBtn"
           class="toggle"
           onclick="toggleGuide()">
     홈 화면에 바로가기 추가 ▼
   </button>
 
-  <div id="guide" class="guide">
+  <!-- 2026.11.27 홈 화면 바로가기 권장 안내 -->
+  <div id="shortcutRecommend"
+       style="
+         margin-top:14px;
+         padding:14px 10px;
+         background:#FFF3CD;
+         border:1px solid #E5C76B;
+         border-radius:12px;
+         text-align:center;
+       ">
 
+    <div style="
+      color:#A00000;
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:12px;
+    ">
+      📌 홈 화면 바로가기 추가를 권장합니다.
+    </div>
+
+    <div style="
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+    ">
+
+      <img src="./parkgolf-192.png"
+           alt="파크골프 바로가기 아이콘"
+           style="
+             width:65px;
+             height:65px;
+             border-radius:12px;
+             flex-shrink:0;
+           ">
+
+      <div style="
+        color:#333333;
+        font-size:17px;
+        line-height:1.6;
+        font-weight:500;
+      ">
+        한 번만 추가해 놓으시면<br>
+        다음부터 카톡이나 밴드를 찾지 않고<br>
+        <b style="color:#005BBB;">
+          홈 화면의 아이콘 터치 한 번으로
+        </b><br>
+        편리하게 이용하실 수 있습니다.
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="guide" class="guide">
     <!-- 카카오톡·밴드 내부 브라우저 안내 -->
     <div id="externalArea"
          style="display:none; padding:16px 0;">
@@ -290,6 +345,12 @@ const CLUB_NAME =
 document.title = CLUB_NAME;
 
 /**************************************************
+ * 2026.11.27 해당 클럽명 버튼 자동 표시
+ **************************************************/
+document.getElementById('openClubBtn')
+  .textContent = CLUB_NAME + ' 열기';
+
+/**************************************************
  * 2. 브라우저 종류 확인
  **************************************************/
 
@@ -367,6 +428,10 @@ function toggleGuide() {
 
 function showGuide() {
 
+  // 2026.11.27 권장 안내문 숨김
+  document.getElementById('shortcutRecommend')
+    .style.display = 'none';
+
   document.getElementById('guide')
     .style.display = 'block';
 
@@ -443,41 +508,23 @@ function prepareShortcut() {
 }
 
 /**************************************************
- * 6-1. 바로가기 주소 준비 완료
- * 2026.11.26 신규 추가
+ * 2026.11.27 완료 확인 후 최초 화면 복귀
  **************************************************/
-
-function showReady() {
-
-  const url =
-    new URL(window.location.href);
-
-  // 등록 준비 조건 제거
-  url.searchParams.delete('setup');
-
-  history.replaceState(
-    null,
-    '',
-    url.toString()
-  );
+function closeShortcutGuide() {
 
   document.getElementById('guide')
-    .style.display = 'block';
+    .style.display = 'none';
 
-  // 2026.11.26 주소 준비 완료 화면에서 버튼 숨김
+  // 최초 화면 버튼 다시 표시
   document.getElementById('toggleBtn')
-    .style.display = 'none';
-
-  document.getElementById('externalArea')
-    .style.display = 'none';
-
-  document.getElementById('prepareArea')
-    .style.display = 'none';
-
-  document.getElementById('readyArea')
     .style.display = 'block';
 
-  showBrowserInstructions();
+  document.getElementById('toggleBtn')
+    .textContent = '홈 화면에 바로가기 추가 ▼';
+
+  // 권장 안내문 다시 표시
+  document.getElementById('shortcutRecommend')
+    .style.display = 'block';
 
 }
 
@@ -606,11 +653,14 @@ function initializePage() {
   }
 
     // 밴드 접속 시 안내문 자동 표시
-  if (IS_BAND_LIKE) {
+    if (IS_BAND_LIKE) {
+
+    // 2026.11.27 권장 안내문 숨김
+    document.getElementById('shortcutRecommend')
+      .style.display = 'none';
 
     const btn =
       document.getElementById('toggleBtn');
-
     // 2026.11.26 밴드 안내 화면에서 버튼 숨김
     btn.style.display = 'none';
 
