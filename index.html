@@ -572,11 +572,12 @@ function completeShortcut() {
 }
 
 /**************************************************
- * 2026.11.27 완료 확인 후 최초 화면 복귀
+ * 2026.11.27 바로가기 추가 완료 후
+ * 해당 클럽 운영 화면 자동 연결
  **************************************************/
-
 function closeShortcutGuide() {
 
+  // 안내창 닫기
   document.getElementById('guide')
     .style.display = 'none';
 
@@ -590,6 +591,9 @@ function closeShortcutGuide() {
   // 권장 안내문 다시 표시
   document.getElementById('shortcutRecommend')
     .style.display = 'block';
+
+  // 해당 클럽 운영 화면 자동 연결
+  openClub();
 
 }
 
