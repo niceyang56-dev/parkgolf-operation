@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -187,9 +188,8 @@ button {
 
   </div>
 
-  </div>
-
   <div id="guide" class="guide">
+
     <!-- 카카오톡·밴드 내부 브라우저 안내 -->
     <div id="externalArea"
          style="display:none; padding:16px 0;">
@@ -240,7 +240,7 @@ button {
      ">
   추가 완료 메시지가 표시되면<br>
   아래 버튼을 눌러 주십시오.
-</div> 
+</div>
 
 <!-- 2026.11.26 바로가기 추가 완료 버튼 -->
 <button id="shortcutCompleteBtn"
@@ -502,23 +502,45 @@ function prepareShortcut() {
 }
 
 /**************************************************
- * 2026.11.27 완료 확인 후 최초 화면 복귀
+ * 6-1. 바로가기 주소 준비 완료
+ * 2026.11.27 기존 정상 동작 함수 복원
  **************************************************/
-function closeShortcutGuide() {
 
-  document.getElementById('guide')
+function showReady() {
+
+  // 2026.11.27 권장 안내문 숨김
+  document.getElementById('shortcutRecommend')
     .style.display = 'none';
 
-  // 최초 화면 버튼 다시 표시
-  document.getElementById('toggleBtn')
+  const url =
+    new URL(window.location.href);
+
+  // 등록 준비 조건 제거
+  url.searchParams.delete('setup');
+
+  history.replaceState(
+    null,
+    '',
+    url.toString()
+  );
+
+  document.getElementById('guide')
     .style.display = 'block';
 
+  // 2026.11.26 주소 준비 완료 화면에서 버튼 숨김
   document.getElementById('toggleBtn')
-    .textContent = '홈 화면에 바로가기 추가 ▼';
+    .style.display = 'none';
 
-  // 권장 안내문 다시 표시
-  document.getElementById('shortcutRecommend')
+  document.getElementById('externalArea')
+    .style.display = 'none';
+
+  document.getElementById('prepareArea')
+    .style.display = 'none';
+
+  document.getElementById('readyArea')
     .style.display = 'block';
+
+  showBrowserInstructions();
 
 }
 
@@ -550,7 +572,7 @@ function completeShortcut() {
 }
 
 /**************************************************
- * 2026.11.26 완료 확인 후 안내창 닫기
+ * 2026.11.27 완료 확인 후 최초 화면 복귀
  **************************************************/
 
 function closeShortcutGuide() {
@@ -558,15 +580,18 @@ function closeShortcutGuide() {
   document.getElementById('guide')
     .style.display = 'none';
 
-  // 2026.11.26 최초 화면 버튼 다시 표시
+  // 최초 화면 버튼 다시 표시
   document.getElementById('toggleBtn')
     .style.display = 'block';
 
   document.getElementById('toggleBtn')
     .textContent = '홈 화면에 바로가기 추가 ▼';
 
+  // 권장 안내문 다시 표시
+  document.getElementById('shortcutRecommend')
+    .style.display = 'block';
+
 }
-  
 
 /**************************************************
  * 7. 브라우저별 홈화면 추가 안내
@@ -646,8 +671,8 @@ function initializePage() {
 
   }
 
-    // 밴드 접속 시 안내문 자동 표시
-    if (IS_BAND_LIKE) {
+  // 밴드 접속 시 안내문 자동 표시
+  if (IS_BAND_LIKE) {
 
     // 2026.11.27 권장 안내문 숨김
     document.getElementById('shortcutRecommend')
@@ -655,6 +680,7 @@ function initializePage() {
 
     const btn =
       document.getElementById('toggleBtn');
+
     // 2026.11.26 밴드 안내 화면에서 버튼 숨김
     btn.style.display = 'none';
 
